@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="FeatherLog API Tests" parallel="classes" thread-count="4">
+
+    <test name="Birds">
+        <packages>
+            <package name="com.featherlog.apitests.birds"/>
+        </packages>
+    </test>
+
+    <test name="Locations">
+        <packages>
+            <package name="com.featherlog.apitests.locations"/>
+        </packages>
+    </test>
+
+    <test name="Sightings">
+        <packages>
+            <package name="com.featherlog.apitests.sightings"/>
+        </packages>
+    </test>
+
+    <test name="Stats">
+        <packages>
+            <package name="com.featherlog.apitests.stats"/>
+        </packages>
+    </test>
+
+</suite>

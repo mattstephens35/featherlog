@@ -60,6 +60,84 @@
   --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
 
   --header-height: 68px;
+
+  --color-danger-dark: #b91c1c;
+  --color-danger-border: #fecaca;
+  --color-success-border: #bbf7d0;
+  --hero-eyebrow-bg: rgba(255, 255, 255, 0.6);
+
+  --hero-sky-top: #fdf6e3;
+  --hero-sky-bottom: #cfe8e0;
+  --hero-hill-far-top: #3f9c74;
+  --hero-hill-far-bottom: #2e7d5b;
+  --hero-hill-near-top: #1f6f5c;
+  --hero-hill-near-bottom: #175c4c;
+  --hero-water-top: #bcdcef;
+  --hero-water-bottom: #9cc9e6;
+  --hero-sun: #e0a458;
+  --hero-tree-trunk: #7a5230;
+  --hero-tree-canopy-dark: #1f6f5c;
+  --hero-tree-canopy-light: #2e7d5b;
+  --hero-bird: #1f2937;
+}
+
+[data-theme="dark"] {
+  --color-primary: #4cae8e;
+  --color-primary-dark: #6fc7a8;
+  --color-primary-light: #1d3a30;
+  --color-accent: #e0a458;
+  --color-accent-dark: #f0bc7a;
+  --color-accent-light: #3a2f1d;
+  --color-sky: #8fb4d6;
+  --color-sky-light: #1e2c3a;
+
+  --color-bg: #14181a;
+  --color-surface: #1e2326;
+  --color-surface-alt: #252b2e;
+
+  --color-text: #e8eaed;
+  --color-text-muted: #a3acb5;
+  --color-text-faint: #6b7680;
+
+  --color-border: #323a3e;
+  --color-border-strong: #454f54;
+
+  --color-danger-dark: #991b1b;
+  --color-danger-light: #3a1f1f;
+  --color-danger-border: #5a2e2e;
+  --color-success: #4ade80;
+  --color-success-light: #1c3326;
+  --color-success-border: #2f5d44;
+
+  --status-lc-bg: #1c3326;
+  --status-lc-text: #4ade80;
+  --status-nt-bg: #3a3115;
+  --status-nt-text: #fbd24a;
+  --status-vu-bg: #3a2615;
+  --status-vu-text: #fb9b4a;
+  --status-en-bg: #3a1f1f;
+  --status-en-text: #f87171;
+  --status-cr-bg: #421e1e;
+  --status-cr-text: #fca5a5;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  --hero-sky-top: #1a2332;
+  --hero-sky-bottom: #0f1c24;
+  --hero-hill-far-top: #2a5e47;
+  --hero-hill-far-bottom: #1d4a38;
+  --hero-hill-near-top: #15392f;
+  --hero-hill-near-bottom: #0f2a23;
+  --hero-water-top: #16344a;
+  --hero-water-bottom: #0f2638;
+  --hero-sun: #c9a06a;
+  --hero-tree-trunk: #4a3320;
+  --hero-tree-canopy-dark: #15392f;
+  --hero-tree-canopy-light: #1d4a38;
+  --hero-bird: #e8eaed;
+  --hero-eyebrow-bg: rgba(0, 0, 0, 0.25);
 }
 
 html,
@@ -75,6 +153,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #root {
@@ -414,8 +493,8 @@ ol {
 }
 
 .btn--danger:hover:not(:disabled) {
-  background: #b91c1c;
-  border-color: #b91c1c;
+  background: var(--color-danger-dark);
+  border-color: var(--color-danger-dark);
   text-decoration: none;
 }
 
@@ -1019,7 +1098,7 @@ ol {
   text-transform: uppercase;
   font-size: 0.78rem;
   color: var(--color-primary-dark);
-  background: rgba(255, 255, 255, 0.6);
+  background: var(--hero-eyebrow-bg);
   padding: 4px 12px;
   border-radius: var(--radius-pill);
   margin-bottom: 12px;
@@ -1321,7 +1400,7 @@ ol {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 1100;
   padding: 20px;
 }
 
@@ -1353,7 +1432,7 @@ ol {
   position: fixed;
   top: 84px;
   right: 24px;
-  z-index: 200;
+  z-index: 1200;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1386,13 +1465,13 @@ ol {
 .toast--success {
   background: var(--color-success-light);
   color: var(--status-lc-text);
-  border: 1px solid #bbf7d0;
+  border: 1px solid var(--color-success-border);
 }
 
 .toast--error {
   background: var(--color-danger-light);
   color: var(--color-danger);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-danger-border);
 }
 
 /* ---------------------------------------------------------------- */
@@ -1450,7 +1529,7 @@ ol {
 .error-banner {
   background: var(--color-danger-light);
   color: var(--color-danger);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-danger-border);
   border-radius: var(--radius-md);
   padding: 14px 18px;
   margin-bottom: 20px;
@@ -1491,4 +1570,132 @@ ol {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* ---------------------------------------------------------------- */
+/* Map page                                                           */
+/* ---------------------------------------------------------------- */
+
+.map-container {
+  height: 600px;
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.map-container .leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-body);
+  background: var(--color-surface-alt);
+}
+
+.map-marker {
+  background: transparent;
+  border: none;
+}
+
+.map-marker__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: var(--shadow-md);
+}
+
+.map-marker__icon-inner {
+  transform: rotate(45deg);
+  font-size: 1.3rem;
+}
+
+[data-theme="dark"] .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.85);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.leaflet-popup-content a {
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 860px) {
+  .map-container {
+    height: 400px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Stats page                                                         */
+/* ---------------------------------------------------------------- */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.stats-panel {
+  padding: 22px;
+}
+
+.stats-panel--wide {
+  grid-column: 1 / -1;
+}
+
+.chart-container {
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/* Activity heatmap                                                   */
+/* ---------------------------------------------------------------- */
+
+.activity-heatmap__streak {
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+
+.activity-heatmap__grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(7, 14px);
+  gap: 3px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+.activity-heatmap__cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--color-border);
+}
+
+.activity-heatmap__cell--level-1 {
+  background: var(--color-primary-light);
+}
+
+.activity-heatmap__cell--level-2 {
+  background: var(--color-primary);
+  opacity: 0.65;
+}
+
+.activity-heatmap__cell--level-3 {
+  background: var(--color-primary);
 }

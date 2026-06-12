@@ -1,7 +1,14 @@
 package com.featherlog.api.service;
 
+import com.featherlog.api.dto.ActivityResponse;
+import com.featherlog.api.dto.ConservationBreakdownResponse;
+import com.featherlog.api.dto.LifersResponse;
 import com.featherlog.api.dto.SightingResponse;
 import com.featherlog.api.dto.StatsSummaryResponse;
+import com.featherlog.api.dto.TimelineResponse;
+import com.featherlog.api.model.Bird;
+import com.featherlog.api.model.ConservationStatus;
+import com.featherlog.api.model.Sighting;
 import com.featherlog.api.repository.BirdRepository;
 import com.featherlog.api.repository.LocationRepository;
 import com.featherlog.api.repository.SightingRepository;
@@ -10,8 +17,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +85,90 @@ public class StatsService {
                 topBirds,
                 topLocations
         );
+    }
+
+    public TimelineResponse getTimeline() {
+        List<LocalDate> dates = sightingRepository.findAllSightingDates();
+
+        Map<YearMonth, Long> counts = dates.stream()
+                .collect(Collectors.groupingBy(YearMonth::from, TreeMap::new, Collectors.counting()));
+
+        List<TimelineResponse.MonthlyCount> months = counts.entrySet().stream()
+                .map(e -> new TimelineResponse.MonthlyCount(e.getKey().toString(), e.getValue()))
+                .toList();
+
+        return new TimelineResponse(months);
+    }
+
+    public ConservationBreakdownResponse getConservationBreakdown() {
+        Map<ConservationStatus, Long> speciesCounts = birdRepository.findAll().stream()
+                .collect(Collectors.groupingBy(Bird::getConservationStatus, Collectors.counting()));
+
+        Map<ConservationStatus, Long> sightingCounts = sightingRepository.findAllSightingConservationStatuses().stream()
+                .collect(Collectors.groupingBy(status -> status, Collectors.counting()));
+
+        List<ConservationBreakdownResponse.StatusCount> statuses = Arrays.stream(ConservationStatus.values())
+                .map(status -> new ConservationBreakdownResponse.StatusCount(
+                        status,
+                        speciesCounts.getOrDefault(status, 0L),
+                        sightingCounts.getOrDefault(status, 0L)))
+                .toList();
+
+        return new ConservationBreakdownResponse(statuses);
+    }
+
+    public LifersResponse getLifers() {
+        List<Sighting> sightings = sightingRepository.findAllByOrderBySightingDateAscIdAsc();
+
+        Map<Long, Sighting> firstSightingByBird = new LinkedHashMap<>();
+        for (Sighting sighting : sightings) {
+            firstSightingByBird.putIfAbsent(sighting.getBird().getId(), sighting);
+        }
+
+        List<LifersResponse.Lifer> lifers = firstSightingByBird.values().stream()
+                .sorted(Comparator.comparing(Sighting::getSightingDate).thenComparing(Sighting::getId))
+                .map(s -> new LifersResponse.Lifer(
+                        SightingResponse.BirdSummary.from(s.getBird()),
+                        s.getSightingDate(),
+                        SightingResponse.LocationSummary.from(s.getLocation())))
+                .toList();
+
+        return new LifersResponse(lifers);
+    }
+
+    public ActivityResponse getActivity() {
+        List<LocalDate> dates = sightingRepository.findAllSightingDates();
+
+        Map<LocalDate, Long> countsByDate = dates.stream()
+                .collect(Collectors.groupingBy(d -> d, TreeMap::new, Collectors.counting()));
+
+        List<ActivityResponse.DayCount> days = countsByDate.entrySet().stream()
+                .map(e -> new ActivityResponse.DayCount(e.getKey(), e.getValue()))
+                .toList();
+
+        int longestStreak = 0;
+        LocalDate longestStart = null;
+        LocalDate longestEnd = null;
+
+        int currentStreak = 0;
+        LocalDate currentStart = null;
+        LocalDate previousDate = null;
+
+        for (LocalDate date : countsByDate.keySet()) {
+            if (previousDate != null && date.equals(previousDate.plusDays(1))) {
+                currentStreak++;
+            } else {
+                currentStreak = 1;
+                currentStart = date;
+            }
+            if (currentStreak > longestStreak) {
+                longestStreak = currentStreak;
+                longestStart = currentStart;
+                longestEnd = date;
+            }
+            previousDate = date;
+        }
+
+        return new ActivityResponse(days, longestStreak, longestStart, longestEnd);
     }
 }

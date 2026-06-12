@@ -6,6 +6,10 @@ backend/*.jar
 *.log
 HELP.md
 
+# API tests (Gradle / Java)
+api-tests/build/
+api-tests/.gradle/
+
 # Frontend (Node)
 frontend/node_modules/
 frontend/dist/

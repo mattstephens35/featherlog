@@ -1,5 +1,5 @@
 # --- Build stage ---
-FROM maven:3.9-eclipse-temurin-17 AS build
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Cache dependencies separately from source for faster rebuilds
@@ -10,7 +10,7 @@ COPY src ./src
 RUN mvn -B package -DskipTests
 
 # --- Runtime stage ---
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/target/featherlog-api.jar app.jar

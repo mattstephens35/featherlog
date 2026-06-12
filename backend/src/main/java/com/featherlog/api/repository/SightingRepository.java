@@ -1,5 +1,6 @@
 package com.featherlog.api.repository;
 
+import com.featherlog.api.model.ConservationStatus;
 import com.featherlog.api.model.Sighting;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,14 @@ import java.util.List;
 public interface SightingRepository extends JpaRepository<Sighting, Long>, JpaSpecificationExecutor<Sighting> {
 
     List<Sighting> findTop5ByOrderBySightingDateDescIdDesc();
+
+    List<Sighting> findAllByOrderBySightingDateAscIdAsc();
+
+    @Query("SELECT s.sightingDate FROM Sighting s")
+    List<LocalDate> findAllSightingDates();
+
+    @Query("SELECT s.bird.conservationStatus FROM Sighting s")
+    List<ConservationStatus> findAllSightingConservationStatuses();
 
     @Query("SELECT COUNT(DISTINCT s.bird.id) FROM Sighting s")
     long countDistinctBirds();

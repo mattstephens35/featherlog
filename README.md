@@ -16,7 +16,7 @@ testing.
 | Layer | Technology |
 |---|---|
 | Frontend | React 18, Vite, React Router, Axios, `flag-icons` |
-| Backend | Java 17, Spring Boot 3.2 (Web, Data JPA, Validation, Actuator) |
+| Backend | Java 21, Spring Boot 3.2 (Web, Data JPA, Validation, Actuator) |
 | Database | MySQL 8, Flyway migrations |
 | Containers | Docker, Docker Compose, multi-stage builds, nginx (frontend) |
 
@@ -84,7 +84,7 @@ docker compose down -v
 
 ## Local Development (without Docker)
 
-**Requirements:** Java 17+, Maven 3.9+, Node.js 18+, and a MySQL 8 instance.
+**Requirements:** Java 21+, Maven 3.9+, Node.js 18+, and a MySQL 8 instance.
 
 ### 1. Start MySQL only
 
@@ -289,6 +289,10 @@ or `locationId` returns **404**.
 | Method | Path | Description |
 |---|---|---|
 | GET | `/api/stats/summary` | Dashboard summary (see below) |
+| GET | `/api/stats/timeline` | Monthly sighting counts, oldest first |
+| GET | `/api/stats/conservation` | Species/sighting counts by conservation status |
+| GET | `/api/stats/lifers` | First-ever sighting of each species ("lifers"), oldest first |
+| GET | `/api/stats/activity` | Per-day sighting counts plus the longest sighting streak |
 
 ```json
 {
@@ -301,6 +305,62 @@ or `locationId` returns **404**.
   "recentSightings": [ /* up to 5 SightingResponse, most recent first */ ],
   "topBirds": [ { "birdId": 7, "commonName": "Mallard", "icon": "🦆", "colorHex": "#2E7D5B", "sightingCount": 4 } ],
   "topLocations": [ { "locationId": 1, "name": "Everglades National Park", "countryCode": "us", "icon": "💧", "sightingCount": 5 } ]
+}
+```
+
+`GET /api/stats/timeline`:
+
+```json
+{
+  "months": [
+    { "yearMonth": "2026-05", "sightingCount": 18 },
+    { "yearMonth": "2026-06", "sightingCount": 14 }
+  ]
+}
+```
+
+`GET /api/stats/conservation` — one entry per `ConservationStatus` value
+(always 5 entries, including statuses with zero birds/sightings):
+
+```json
+{
+  "statuses": [
+    { "status": "LEAST_CONCERN", "speciesCount": 18, "sightingCount": 24 },
+    { "status": "NEAR_THREATENED", "speciesCount": 3, "sightingCount": 4 },
+    { "status": "VULNERABLE", "speciesCount": 2, "sightingCount": 2 },
+    { "status": "ENDANGERED", "speciesCount": 1, "sightingCount": 1 },
+    { "status": "CRITICALLY_ENDANGERED", "speciesCount": 1, "sightingCount": 1 }
+  ]
+}
+```
+
+`GET /api/stats/lifers` — `bird` and `firstSeenLocation` are the same
+`BirdSummary`/`LocationSummary` shapes embedded in `SightingResponse`:
+
+```json
+{
+  "lifers": [
+    {
+      "bird": { "id": 7, "commonName": "Mallard", "scientificName": "Anas platyrhynchos", "icon": "🦆", "colorHex": "#2E7D5B" },
+      "firstSeenDate": "2026-05-02",
+      "firstSeenLocation": { "id": 1, "name": "Everglades National Park", "country": "United States", "countryCode": "us", "icon": "💧" }
+    }
+  ]
+}
+```
+
+`GET /api/stats/activity` — `days` is sparse (only dates with at least one
+sighting); `longestStreak*` fields are `null`/`0` if there are no sightings:
+
+```json
+{
+  "days": [
+    { "date": "2026-05-02", "sightingCount": 2 },
+    { "date": "2026-05-03", "sightingCount": 1 }
+  ],
+  "longestStreak": 4,
+  "longestStreakStart": "2026-05-02",
+  "longestStreakEnd": "2026-05-05"
 }
 ```
 
@@ -346,9 +406,11 @@ All errors return a consistent JSON shape:
 | `/birds/:id` | Bird Detail | Species details + recent sightings of this bird |
 | `/locations` | Birding Locations | Searchable, filterable, paginated grid |
 | `/locations/:id` | Location Detail | Location details + recent sightings here |
+| `/map` | Map | Leaflet/OpenStreetMap view of all locations |
 | `/sightings` | Sighting Journal | Filterable list with edit/delete/favorite |
 | `/sightings/new` | Log a Sighting | Create form |
 | `/sightings/:id/edit` | Edit Sighting | Edit form, pre-populated |
+| `/stats` | Statistics | Sighting timeline, conservation breakdown, activity heatmap, lifer log |
 | `*` | Not Found | 404 page |
 
 ---
@@ -360,8 +422,8 @@ automated tests stable selectors that don't depend on visual styling or copy.
 
 | Pattern | Example | Used for |
 |---|---|---|
-| `nav-*` | `nav-dashboard`, `nav-birds`, `nav-locations`, `nav-sightings`, `nav-log-sighting`, `nav-toggle` | Top navigation links/buttons |
-| `*-page` | `dashboard-page`, `birds-page`, `bird-detail-page`, `sightings-page`, `sighting-form-page` | Top-level page containers |
+| `nav-*` | `nav-dashboard`, `nav-birds`, `nav-locations`, `nav-map`, `nav-sightings`, `nav-stats`, `nav-log-sighting`, `nav-theme-toggle`, `nav-toggle` | Top navigation links/buttons |
+| `*-page` | `dashboard-page`, `birds-page`, `bird-detail-page`, `sightings-page`, `sighting-form-page`, `map-page`, `stats-page` | Top-level page containers |
 | `bird-card-{id}` | `bird-card-7` | Bird grid card (links to detail page) |
 | `location-card-{id}` | `location-card-1` | Location grid card |
 | `sighting-row-{id}` | `sighting-row-12` | A row in the sighting journal |
@@ -376,6 +438,11 @@ automated tests stable selectors that don't depend on visual styling or copy.
 | `submit-sighting`, `cancel-sighting` | — | Form submit/cancel buttons |
 | `toast-success`, `toast-error` | — | Toast notifications after create/update/delete |
 | `loading-state`, `empty-state`, `error-banner` | — | Async/empty/error UI states |
+| `map-container`, `map-popup-{id}` | `map-popup-1` | Map view container and per-location popup |
+| `timeline-chart`, `conservation-chart` | — | Stats page charts (sightings over time, conservation breakdown) |
+| `activity-heatmap`, `longest-streak`, `activity-cell-{date}` | `activity-cell-2026-05-02` | Stats page activity calendar and streak callout |
+| `lifer-list`, `lifer-{id}` | `lifer-7` | Stats page lifer log |
+| `lifer-badge` | — | "🏅 Lifer" badge on the bird detail page |
 
 ---
 

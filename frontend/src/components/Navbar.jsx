@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useTheme } from './ThemeContext';
 
 const NAV_LINKS = [
   { to: '/', label: 'Dashboard', testId: 'nav-dashboard', end: true },
   { to: '/birds', label: 'Birds', testId: 'nav-birds' },
   { to: '/locations', label: 'Locations', testId: 'nav-locations' },
+  { to: '/map', label: 'Map', testId: 'nav-map' },
   { to: '/sightings', label: 'Sightings', testId: 'nav-sightings' },
+  { to: '/stats', label: 'Stats', testId: 'nav-stats' },
 ];
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -46,6 +50,15 @@ export default function Navbar() {
             <span aria-hidden="true">+</span>
             <span className="navbar__cta-text">Log Sighting</span>
           </Link>
+          <button
+            type="button"
+            className="btn btn--icon btn--secondary navbar__theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            data-testid="nav-theme-toggle"
+          >
+            {theme === 'dark' ? '☀️' : '🌙'}
+          </button>
           <button
             type="button"
             className="btn btn--icon btn--secondary navbar__toggle"

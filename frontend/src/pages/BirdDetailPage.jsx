@@ -15,6 +15,7 @@ export default function BirdDetailPage() {
   const { id } = useParams();
   const [bird, setBird] = useState(null);
   const [sightings, setSightings] = useState([]);
+  const [firstSighting, setFirstSighting] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -22,11 +23,16 @@ export default function BirdDetailPage() {
     let cancelled = false;
     setLoading(true);
     setError('');
-    Promise.all([fetchBird(id), fetchSightings({ birdId: id, size: 5, sort: 'sightingDate,desc' })])
-      .then(([birdData, sightingsData]) => {
+    Promise.all([
+      fetchBird(id),
+      fetchSightings({ birdId: id, size: 5, sort: 'sightingDate,desc' }),
+      fetchSightings({ birdId: id, size: 1, sort: 'sightingDate,asc' }),
+    ])
+      .then(([birdData, sightingsData, firstData]) => {
         if (cancelled) return;
         setBird(birdData);
         setSightings(sightingsData.content);
+        setFirstSighting(firstData.content[0] || null);
       })
       .catch(() => {
         if (!cancelled) setError('Unable to load this bird. It may not exist.');
@@ -88,6 +94,11 @@ export default function BirdDetailPage() {
               <span className="badge badge--neutral">{bird.family}</span>
               <span className="badge badge--neutral">{sizeLabel}</span>
               {bird.migratory && <span className="badge badge--accent">Migratory</span>}
+              {firstSighting && (
+                <span className="badge badge--accent" data-testid="lifer-badge">
+                  🏅 Lifer: {formatDate(firstSighting.sightingDate)}
+                </span>
+              )}
             </div>
           </div>
         </div>
