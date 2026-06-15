@@ -1,4 +1,4 @@
-package com.featherlog.apitests.stats;
+package com.featherlog.apitests.tests;
 
 import com.featherlog.apitests.clients.StatsClient;
 import com.featherlog.apitests.model.ActivityResponse;

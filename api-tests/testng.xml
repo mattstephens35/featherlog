@@ -3,27 +3,42 @@
 <suite name="FeatherLog API Tests" parallel="classes" thread-count="4">
 
     <test name="Birds">
-        <packages>
-            <package name="com.featherlog.apitests.birds"/>
-        </packages>
+        <classes>
+            <class name="com.featherlog.apitests.tests.BirdListTests"/>
+            <class name="com.featherlog.apitests.tests.BirdFamiliesTests"/>
+            <class name="com.featherlog.apitests.tests.BirdGetByIdTests"/>
+            <class name="com.featherlog.apitests.tests.BirdCreateTests"/>
+            <class name="com.featherlog.apitests.tests.BirdUpdateTests"/>
+            <class name="com.featherlog.apitests.tests.BirdDeleteTests"/>
+        </classes>
     </test>
 
     <test name="Locations">
-        <packages>
-            <package name="com.featherlog.apitests.locations"/>
-        </packages>
+        <classes>
+            <class name="com.featherlog.apitests.tests.LocationListTests"/>
+            <class name="com.featherlog.apitests.tests.LocationCountriesTests"/>
+            <class name="com.featherlog.apitests.tests.LocationGetByIdTests"/>
+            <class name="com.featherlog.apitests.tests.LocationCreateTests"/>
+            <class name="com.featherlog.apitests.tests.LocationUpdateTests"/>
+            <class name="com.featherlog.apitests.tests.LocationDeleteTests"/>
+        </classes>
     </test>
 
     <test name="Sightings">
-        <packages>
-            <package name="com.featherlog.apitests.sightings"/>
-        </packages>
+        <classes>
+            <class name="com.featherlog.apitests.tests.SightingListTests"/>
+            <class name="com.featherlog.apitests.tests.SightingGetByIdTests"/>
+            <class name="com.featherlog.apitests.tests.SightingCreateTests"/>
+            <class name="com.featherlog.apitests.tests.SightingUpdateTests"/>
+            <class name="com.featherlog.apitests.tests.SightingFavoriteTests"/>
+            <class name="com.featherlog.apitests.tests.SightingDeleteTests"/>
+        </classes>
     </test>
 
     <test name="Stats">
-        <packages>
-            <package name="com.featherlog.apitests.stats"/>
-        </packages>
+        <classes>
+            <class name="com.featherlog.apitests.tests.StatsTests"/>
+        </classes>
     </test>
 
 </suite>
