@@ -66,6 +66,12 @@ sighting) run against `http://localhost:5173` by default — start the
 frontend dev server and backend/MySQL first. Set `BASE_URL` to point at the
 Docker Compose stack instead (`http://localhost:8081`).
 
+`e2e/mcp-tests/` contains the same three flows as plain-language checklists
+for an AI agent driving a browser via the Playwright MCP server (configured
+in `.mcp.json`) — see `e2e/mcp-tests/README.md`. These also run in CI via
+`.github/workflows/playwright-mcp-tests.yml`, which requires an
+`ANTHROPIC_API_KEY` repo secret.
+
 ## Architecture
 
 **Three-tier layout, talking only via relative `/api/...` URLs:**
