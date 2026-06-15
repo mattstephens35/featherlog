@@ -22,8 +22,10 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      // Real Google Chrome via Playwright's `chrome` channel, rather than
+      // the bundled Chromium.
+      name: 'chrome',
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
     },
   ],
 });

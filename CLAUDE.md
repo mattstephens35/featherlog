@@ -57,7 +57,7 @@ There are currently no frontend unit tests or a configured linter.
 
 ```bash
 npm install
-npx playwright install chromium   # first time only
+npx playwright install chrome     # first time only
 npx playwright test                # requires the app stack already running
 ```
 
