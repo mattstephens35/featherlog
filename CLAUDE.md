@@ -51,7 +51,20 @@ npm run preview   # serve the build on :4173
 Set `VITE_API_PROXY_TARGET` to point the dev/preview proxy at a non-default
 backend host.
 
-There are currently no frontend tests or a configured linter.
+There are currently no frontend unit tests or a configured linter.
+
+### End-to-end tests (`e2e/`)
+
+```bash
+npm install
+npx playwright install chromium   # first time only
+npx playwright test                # requires the app stack already running
+```
+
+Basic UI flows (add a sighting, sightings list sort order, delete a
+sighting) run against `http://localhost:5173` by default — start the
+frontend dev server and backend/MySQL first. Set `BASE_URL` to point at the
+Docker Compose stack instead (`http://localhost:8081`).
 
 ## Architecture
 
