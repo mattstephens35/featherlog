@@ -1,4 +1,4 @@
-package com.featherlog.apitests.birds;
+package com.featherlog.apitests.tests;
 
 import com.featherlog.apitests.clients.BirdClient;
 import com.featherlog.apitests.clients.LocationClient;
@@ -12,22 +12,22 @@ import com.featherlog.apitests.support.BaseApiTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class BirdDeleteTests extends BaseApiTest {
+public class LocationDeleteTests extends BaseApiTest {
 
     @Test
-    public void existingBirdIsDeleted() {
-        BirdResponse created = BirdClient.createValid();
+    public void existingLocationIsDeleted() {
+        LocationResponse created = LocationClient.createValid();
 
-        BirdClient.delete(created.id())
+        LocationClient.delete(created.id())
                 .then().statusCode(204);
 
-        BirdClient.getById(created.id())
+        LocationClient.getById(created.id())
                 .then().statusCode(404);
     }
 
     @Test
     public void nonExistentIdReturns404() {
-        ErrorResponse error = BirdClient.delete(999999)
+        ErrorResponse error = LocationClient.delete(999999)
                 .then().statusCode(404)
                 .extract().as(ErrorResponse.class);
 
@@ -35,7 +35,7 @@ public class BirdDeleteTests extends BaseApiTest {
     }
 
     @Test
-    public void birdReferencedBySightingReturns409() {
+    public void locationReferencedBySightingReturns409() {
         BirdResponse bird = BirdClient.createValid();
         LocationResponse location = LocationClient.createValid();
 
@@ -44,7 +44,7 @@ public class BirdDeleteTests extends BaseApiTest {
                 .then().statusCode(201)
                 .extract().as(SightingResponse.class);
 
-        BirdClient.delete(bird.id())
+        LocationClient.delete(location.id())
                 .then().statusCode(409);
 
         SightingClient.delete(sighting.id());

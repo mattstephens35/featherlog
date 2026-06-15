@@ -1,4 +1,4 @@
-package com.featherlog.apitests.birds;
+package com.featherlog.apitests.tests;
 
 import com.featherlog.apitests.clients.BirdClient;
 import com.featherlog.apitests.model.BirdResponse;

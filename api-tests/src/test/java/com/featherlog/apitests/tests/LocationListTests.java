@@ -1,4 +1,4 @@
-package com.featherlog.apitests.locations;
+package com.featherlog.apitests.tests;
 
 import com.featherlog.apitests.clients.LocationClient;
 import com.featherlog.apitests.model.ErrorResponse;

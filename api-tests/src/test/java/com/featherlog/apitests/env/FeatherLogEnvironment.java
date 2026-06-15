@@ -1,8 +1,10 @@
 package com.featherlog.apitests.env;
 
+import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.Network;
+import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 
@@ -41,6 +43,7 @@ public final class FeatherLogEnvironment {
                         .withStartupTimeout(Duration.ofMinutes(3)));
 
         APP.start();
+        APP.followOutput(new Slf4jLogConsumer(LoggerFactory.getLogger(FeatherLogEnvironment.class)));
     }
 
     private FeatherLogEnvironment() {
