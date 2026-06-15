@@ -70,7 +70,9 @@ Docker Compose stack instead (`http://localhost:8081`).
 for an AI agent driving a browser via the Playwright MCP server (configured
 in `.mcp.json`) — see `e2e/mcp-tests/README.md`. These also run in CI via
 `.github/workflows/playwright-mcp-tests.yml`, which requires an
-`ANTHROPIC_API_KEY` repo secret.
+`ANTHROPIC_API_KEY` repo secret containing a Claude Code OAuth token (from
+`claude setup-token`), passed to `claude-code-base-action` via
+`claude_code_oauth_token`.
 
 ## Architecture
 
