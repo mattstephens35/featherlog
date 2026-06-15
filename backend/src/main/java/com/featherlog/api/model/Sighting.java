@@ -51,7 +51,7 @@ public class Sighting {
     @Column(name = "weather_condition", length = 20)
     private WeatherCondition weatherCondition;
 
-    @Lob
+    @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     @Column(columnDefinition = "TEXT")
     private String notes;
 
