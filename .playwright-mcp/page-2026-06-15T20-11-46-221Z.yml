@@ -1,0 +1,136 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - link "FeatherLog" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e7]: 🪶
+        - text: FeatherLog
+      - navigation [ref=e8]:
+        - link "Dashboard" [ref=e9] [cursor=pointer]:
+          - /url: /
+        - link "Birds" [ref=e10] [cursor=pointer]:
+          - /url: /birds
+        - link "Locations" [ref=e11] [cursor=pointer]:
+          - /url: /locations
+        - link "Map" [ref=e12] [cursor=pointer]:
+          - /url: /map
+        - link "Sightings" [ref=e13] [cursor=pointer]:
+          - /url: /sightings
+        - link "Stats" [ref=e14] [cursor=pointer]:
+          - /url: /stats
+      - generic [ref=e15]:
+        - link "Log Sighting" [ref=e16] [cursor=pointer]:
+          - /url: /sightings/new
+          - generic [ref=e17]: +
+          - generic [ref=e18]: Log Sighting
+        - button "Switch to dark mode" [ref=e19] [cursor=pointer]: 🌙
+        - button "Toggle navigation menu" [ref=e20] [cursor=pointer]: ☰
+  - main [ref=e21]:
+    - generic [ref=e23]:
+      - link "← Back to Sightings" [ref=e24] [cursor=pointer]:
+        - /url: /sightings
+      - generic [ref=e26]:
+        - heading "Log a New Sighting" [level=1] [ref=e27]
+        - paragraph [ref=e28]: Record a bird you spotted in the field.
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: Bird *
+            - combobox "Bird *" [ref=e33]:
+              - option "Select a bird…"
+              - option "🐧 African Penguin"
+              - option "🦩 American Flamingo"
+              - option "🐦 American Robin"
+              - option "🦅 Bald Eagle"
+              - option "🦉 Barn Owl"
+              - option "🐦 Blue Jay"
+              - option "🦅 California Condor"
+              - option "🦢 Canada Goose"
+              - option "🐧 Emperor Penguin"
+              - option "🐦‍⬛ European Starling"
+              - option "🦅 Golden Eagle"
+              - option "🦉 Great Horned Owl"
+              - option "🐤 House Sparrow"
+              - option "🦚 Indian Peafowl"
+              - option "🦆 Mallard" [selected]
+              - option "🕊️ Mourning Dove"
+              - option "🐦 Northern Cardinal"
+              - option "🦅 Peregrine Falcon"
+              - option "🦜 Rainbow Lorikeet"
+              - option "🦜 Scarlet Macaw"
+              - option "🦉 Snowy Owl"
+              - option "🦢 Trumpeter Swan"
+              - option "🐦 Whooping Crane"
+              - option "🦃 Wild Turkey"
+              - option "🦆 Wood Duck"
+          - generic [ref=e34]:
+            - generic [ref=e35]: Location *
+            - combobox "Location *" [ref=e36]:
+              - option "Select a location…" [selected]
+              - option "Atacama Salt Flats"
+              - option "Cairngorms National Park"
+              - option "Camargue Regional Park"
+              - option "Central Park"
+              - option "Doñana National Park"
+              - option "Everglades National Park"
+              - option "Fiordland National Park"
+              - option "Galápagos Islands"
+              - option "Kakadu National Park"
+              - option "Keoladeo National Park"
+              - option "Lake Mývatn"
+              - option "Manu National Park"
+              - option "Monteverde Cloud Forest"
+              - option "Okavango Delta"
+              - option "Pantanal Wetlands"
+              - option "Serengeti National Park"
+              - option "Wadden Sea"
+              - option "Yellowstone National Park"
+          - generic [ref=e37]:
+            - generic [ref=e38]: Date *
+            - textbox "Date *" [ref=e39]: 2026-06-15
+          - generic [ref=e40]:
+            - generic [ref=e41]: Time
+            - textbox "Time" [ref=e42]
+            - generic [ref=e43]: Optional
+          - generic [ref=e44]:
+            - generic [ref=e45]: Quantity *
+            - spinbutton "Quantity *" [ref=e46]: "1"
+          - generic [ref=e47]:
+            - generic [ref=e48]: Observer Name *
+            - textbox "Observer Name *" [ref=e49]
+          - generic [ref=e50]:
+            - generic [ref=e51]: Weather
+            - combobox "Weather" [ref=e52]:
+              - option "Not specified" [selected]
+              - option "☀️ Sunny"
+              - option "⛅ Partly Cloudy"
+              - option "☁️ Cloudy"
+              - option "🌥️ Overcast"
+              - option "🌧️ Rainy"
+              - option "🌫️ Foggy"
+              - option "❄️ Snowy"
+              - option "💨 Windy"
+          - generic [ref=e54]:
+            - checkbox "Mark as a favorite sighting" [ref=e55]
+            - text: Mark as a favorite sighting
+          - generic [ref=e56]:
+            - generic [ref=e57]: Notes
+            - textbox "Notes" [ref=e58]:
+              - /placeholder: Behavior, plumage details, weather, anything notable…
+        - generic [ref=e59]:
+          - link "Cancel" [ref=e60] [cursor=pointer]:
+            - /url: /sightings
+          - button "Save Sighting" [ref=e61] [cursor=pointer]
+  - contentinfo [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]: 🪶
+        - text: FeatherLog
+      - generic [ref=e66]: Built for birders — track sightings, explore species, and discover new hotspots.
+      - generic [ref=e67]:
+        - link "Birds" [ref=e68] [cursor=pointer]:
+          - /url: /birds
+        - link "Locations" [ref=e69] [cursor=pointer]:
+          - /url: /locations
+        - link "Sightings" [ref=e70] [cursor=pointer]:
+          - /url: /sightings

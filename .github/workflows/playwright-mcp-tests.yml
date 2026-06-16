@@ -1,0 +1,126 @@
+name: Playwright MCP Agent Tests
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  playwright-mcp-tests:
+    name: Playwright MCP Agent Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Start application stack
+        run: docker compose up --build -d
+
+      - name: Wait for backend to be healthy
+        run: |
+          for i in $(seq 1 60); do
+            if curl -sf http://localhost:8080/actuator/health > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs
+          exit 1
+
+      - name: Wait for frontend
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8081/ > /dev/null; then exit 0; fi
+            sleep 2
+          done
+          docker compose logs
+          exit 1
+
+      - name: Install Playwright browser for MCP server
+        run: npx -y playwright install --with-deps chromium
+
+      - name: Run Playwright MCP agent tests
+        id: claude-run
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          claude_code_oauth_token: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-6
+          mcp_config: |
+            {
+              "mcpServers": {
+                "playwright": {
+                  "command": "npx",
+                  "args": ["-y", "@playwright/mcp@latest", "--headless"]
+                }
+              }
+            }
+          allowed_tools: >-
+            mcp__playwright__browser_navigate,
+            mcp__playwright__browser_navigate_back,
+            mcp__playwright__browser_click,
+            mcp__playwright__browser_type,
+            mcp__playwright__browser_select_option,
+            mcp__playwright__browser_hover,
+            mcp__playwright__browser_press_key,
+            mcp__playwright__browser_snapshot,
+            mcp__playwright__browser_wait_for,
+            mcp__playwright__browser_take_screenshot,
+            Read,
+            Write
+          max_turns: "100"
+          prompt: |
+            The FeatherLog app is running at http://localhost:8081.
+
+            Read each of these test spec files:
+              - e2e/mcp-tests/add-sighting.md
+              - e2e/mcp-tests/sightings-sort-order.md
+              - e2e/mcp-tests/delete-sighting.md
+
+            For each spec, use http://localhost:8081 as the base URL (ignore
+            the http://localhost:5173 default mentioned in the files), and
+            carry out every numbered step in order using the Playwright MCP
+            browser tools, checking that each step's expected outcome holds.
+            Treat each spec as an independent test.
+
+            When done, write a file at e2e/mcp-tests/results.json with this
+            exact shape (one entry per spec, keyed by filename without
+            extension):
+
+            {
+              "add-sighting": { "passed": true, "details": "..." },
+              "sightings-sort-order": { "passed": true, "details": "..." },
+              "delete-sighting": { "passed": true, "details": "..." }
+            }
+
+            "passed" must be a JSON boolean. "details" should briefly explain
+            what happened, and for failures must say which step failed and
+            why.
+
+      - name: Check MCP test results
+        run: |
+          if [ ! -f e2e/mcp-tests/results.json ]; then
+            echo "e2e/mcp-tests/results.json was not created"
+            exit 1
+          fi
+          cat e2e/mcp-tests/results.json
+          if jq -e 'to_entries | all(.value.passed == true)' e2e/mcp-tests/results.json > /dev/null; then
+            echo "All Playwright MCP agent tests passed"
+          else
+            echo "One or more Playwright MCP agent tests failed"
+            exit 1
+          fi
+
+      - name: Upload MCP test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-mcp-results
+          path: e2e/mcp-tests/results.json
+          retention-days: 7
+
+      - name: Stop application stack
+        if: always()
+        run: docker compose down -v
