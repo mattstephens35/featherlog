@@ -16,6 +16,9 @@ frontend/dist/
 frontend/.vite/
 npm-debug.log*
 
+# Playwright MCP server snapshots
+.playwright-mcp/
+
 # IDE
 .idea/
 *.iml
